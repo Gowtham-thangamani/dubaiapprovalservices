@@ -1,0 +1,20 @@
+{
+  "ignoredUrls": [
+    {
+      "domain": ".*bootstrap.*",
+      "hints": ["*"]
+    },
+    {
+      "domain": ".*jquery.*",
+      "hints": ["*"]
+    },
+    {
+      "domain": ".*owl\\..*",
+      "hints": ["*"]
+    },
+    {
+      "domain": ".*revolution.*",
+      "hints": ["*"]
+    }
+  ]
+}

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Dubai Approval Services Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../images/dubai-approvals.png">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Source Sans Pro',sans-serif;background:#f5f6fa;min-height:100vh}
+        .admin-wrapper{display:flex;min-height:100vh}
+
+        /* Sidebar */
+        .sidebar{width:250px;background:linear-gradient(180deg,#1a1a2e 0%,#16213e 100%);color:#fff;position:fixed;height:100vh;overflow-y:auto;z-index:100}
+        .sidebar-header{padding:20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.1)}
+        .sidebar-logo{width:45px;height:45px;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,0.2)}
+        .sidebar-logo img{width:100%;height:100%;object-fit:cover}
+        .sidebar-brand h2{font-size:1rem;font-weight:600}
+        .sidebar-brand span{font-size:0.75rem;opacity:0.7}
+        .sidebar-menu{padding:15px 0}
+        .menu-section{font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;padding:15px 20px 8px;opacity:0.5}
+        .menu-item{display:flex;align-items:center;gap:12px;padding:12px 20px;color:rgba(255,255,255,0.7);text-decoration:none;transition:all 0.3s ease;border-left:3px solid transparent;position:relative}
+        .menu-item:hover{background:rgba(255,255,255,0.1);color:#fff;border-left-color:#c19a3e}
+        .menu-item.active{background:linear-gradient(90deg,rgba(193,154,62,0.3),transparent);color:#fff;border-left-color:#c19a3e}
+        .menu-item i{width:20px;text-align:center;font-size:1.1rem}
+        .menu-item .badge{background:linear-gradient(135deg,#c19a3e,#d4af37);font-size:0.7rem;padding:3px 10px;border-radius:12px;margin-left:auto;box-shadow:0 2px 8px rgba(193,154,62,0.4)}
+        .menu-item .badge.alert{background:linear-gradient(135deg,#e74c3c,#c0392b);box-shadow:0 2px 8px rgba(231,76,60,0.4);animation:badgePulse 2s infinite}
+        .menu-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);margin:15px 20px}
+        @keyframes badgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+
+        /* Main Content */
+        .main-content{flex:1;margin-left:250px;padding:20px}
+        .top-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;background:#fff;padding:20px 25px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.05);animation:fadeInDown 0.5s ease}
+        .page-title{font-size:1.5rem;color:#1a1a2e;font-weight:700;display:flex;align-items:center;gap:12px}
+        .header-actions{display:flex;gap:10px;align-items:center}
+        .header-btn{padding:10px 20px;border-radius:10px;border:none;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:inherit;display:flex;align-items:center;gap:8px}
+        .btn-primary{background:linear-gradient(135deg,#c19a3e,#d4af37);color:#fff;box-shadow:0 4px 15px rgba(193,154,62,0.3)}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(193,154,62,0.4)}
+        .btn-outline{background:#fff;color:#777;border:2px solid #e0e0e0}
+        .btn-outline:hover{border-color:#c19a3e;color:#c19a3e}
+        .btn-danger{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff}
+        .btn-danger:hover{transform:translateY(-2px)}
+
+        /* Stats */
+        .msg-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:25px}
+        .msg-stat{background:#fff;border-radius:14px;padding:20px;display:flex;align-items:center;gap:15px;box-shadow:0 4px 20px rgba(0,0,0,0.05);animation:fadeInUp 0.5s ease backwards}
+        .msg-stat:nth-child(1){animation-delay:0.1s}
+        .msg-stat:nth-child(2){animation-delay:0.2s}
+        .msg-stat:nth-child(3){animation-delay:0.3s}
+        .msg-stat-icon{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff}
+        .msg-stat h3{font-size:1.8rem;font-weight:700;color:#1a1a2e}
+        .msg-stat p{color:#777;font-size:0.85rem}
+
+        /* Card */
+        .card{background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.05);overflow:hidden;animation:fadeInUp 0.5s ease 0.3s backwards}
+        .card-header{padding:20px 25px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+        .card-header h3{font-size:1rem;color:#1a1a2e;display:flex;align-items:center;gap:10px;font-weight:600}
+        .card-header h3 i{color:#c19a3e}
+        .card-body{padding:0}
+
+        /* Filter tabs */
+        .filter-tabs{display:flex;gap:5px;padding:15px 25px;border-bottom:1px solid #f0f0f0;background:#fafafa}
+        .filter-tab{padding:8px 18px;border-radius:8px;border:none;background:transparent;color:#777;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:inherit}
+        .filter-tab.active{background:linear-gradient(135deg,#c19a3e,#d4af37);color:#fff;box-shadow:0 4px 15px rgba(193,154,62,0.3)}
+        .filter-tab:hover:not(.active){background:#f0f0f0;color:#333}
+
+        /* Message List */
+        .message-list{max-height:calc(100vh - 350px);overflow-y:auto}
+        .message-row{display:flex;align-items:flex-start;gap:15px;padding:18px 25px;border-bottom:1px solid #f5f5f5;transition:all 0.3s;cursor:pointer;position:relative}
+        .message-row:hover{background:#fdf8f0}
+        .message-row.unread{background:#fefcf7;border-left:3px solid #c19a3e}
+        .message-row.selected{background:#f0f5ff;border-left:3px solid #667eea}
+        .msg-checkbox{margin-top:5px;width:18px;height:18px;cursor:pointer;flex-shrink:0}
+        .msg-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:#fff;flex-shrink:0}
+        .msg-body{flex:1;min-width:0}
+        .msg-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+        .msg-name{font-weight:600;color:#1a1a2e;font-size:0.95rem}
+        .msg-name.unread{font-weight:700;color:#c19a3e}
+        .msg-time{font-size:0.75rem;color:#aaa;white-space:nowrap;flex-shrink:0}
+        .msg-service{font-size:0.72rem;color:#c19a3e;background:rgba(193,154,62,0.1);padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:4px}
+        .msg-preview{font-size:0.85rem;color:#777;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .msg-email{font-size:0.75rem;color:#aaa;margin-top:2px}
+        .msg-actions{display:flex;gap:5px;flex-shrink:0;opacity:0;transition:opacity 0.3s}
+        .message-row:hover .msg-actions{opacity:1}
+        .msg-action-btn{width:32px;height:32px;border-radius:8px;border:none;background:#f0f0f0;color:#777;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all 0.3s}
+        .msg-action-btn:hover{background:#e0e0e0;color:#333}
+        .msg-action-btn.delete:hover{background:#ffebee;color:#e74c3c}
+
+        /* Message Detail Modal */
+        .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center}
+        .modal-overlay.show{display:flex}
+        .modal-box{background:#fff;border-radius:20px;width:90%;max-width:600px;max-height:85vh;overflow-y:auto;box-shadow:0 25px 80px rgba(0,0,0,0.3);animation:modalIn 0.3s ease}
+        @keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .modal-header{padding:25px 30px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:flex-start}
+        .modal-header-info h2{font-size:1.2rem;color:#1a1a2e;margin-bottom:5px}
+        .modal-header-info p{color:#aaa;font-size:0.85rem}
+        .modal-close{width:36px;height:36px;border-radius:10px;border:none;background:#f0f0f0;color:#777;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
+        .modal-close:hover{background:#e0e0e0;color:#333}
+        .modal-body{padding:25px 30px}
+        .detail-row{display:flex;padding:12px 0;border-bottom:1px solid #f5f5f5}
+        .detail-label{width:100px;color:#888;font-size:0.85rem;font-weight:600;flex-shrink:0}
+        .detail-value{color:#333;font-size:0.95rem;flex:1}
+        .detail-value a{color:#c19a3e;text-decoration:none}
+        .detail-value a:hover{text-decoration:underline}
+        .detail-message{margin-top:20px;padding:20px;background:#fafafa;border-radius:12px;border-left:4px solid #c19a3e;color:#333;line-height:1.7;font-size:0.95rem;white-space:pre-wrap}
+        .modal-footer{padding:20px 30px;border-top:1px solid #f0f0f0;display:flex;gap:10px;justify-content:flex-end}
+
+        /* Empty state */
+        .empty-state{text-align:center;padding:60px 20px;color:#aaa}
+        .empty-state i{font-size:3rem;margin-bottom:15px;color:#e0e0e0}
+        .empty-state h3{color:#bbb;margin-bottom:8px}
+        .empty-state p{font-size:0.9rem}
+
+        /* Loading */
+        .loading{text-align:center;padding:40px;color:#aaa}
+
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+        /* Toast */
+        .toast{position:fixed;bottom:20px;right:20px;background:#fff;border-radius:12px;padding:15px 20px;box-shadow:0 8px 30px rgba(0,0,0,0.15);display:flex;align-items:center;gap:12px;z-index:999;transform:translateY(100px);opacity:0;transition:all 0.4s ease;border-left:4px solid #c19a3e}
+        .toast.show{transform:translateY(0);opacity:1}
+        .toast-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+        .toast-content{flex:1}
+        .toast-content strong{display:block;color:#1a1a2e;margin-bottom:2px}
+        .toast-content p{font-size:0.85rem;color:#777}
+
+        /* Responsive */
+        @media(max-width:1200px){.msg-stats{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:992px){
+            .sidebar{width:70px}.sidebar-brand,.menu-section,.menu-item span,.menu-item .badge{display:none}
+            .sidebar-header{justify-content:center;padding:15px}.menu-item{justify-content:center;padding:15px}
+            .main-content{margin-left:70px}
+        }
+        @media(max-width:768px){
+            .sidebar{transform:translateX(-100%);width:250px;transition:0.3s}.sidebar.active{transform:translateX(0)}
+            .sidebar-brand,.menu-section,.menu-item span,.menu-item .badge{display:block}
+            .main-content{margin-left:0}.msg-stats{grid-template-columns:1fr}
+            .top-header{flex-direction:column;gap:15px;text-align:center}
+            .header-actions{flex-wrap:wrap;justify-content:center}
+        }
+        .mobile-menu-btn{display:none;position:fixed;top:15px;left:15px;z-index:101;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;border:none;padding:12px 15px;border-radius:10px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.2)}
+        @media(max-width:768px){.mobile-menu-btn{display:block}}
+        .overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:99}.overlay.active{display:block}
+
+        /* Admin utility classes */
+        .admin-text-brand{color:#c19a3e}
+        .admin-grad-purple{background:linear-gradient(135deg,#667eea,#764ba2)}
+        .admin-grad-gold{background:linear-gradient(135deg,#c19a3e,#d4af37)}
+        .admin-grad-blue{background:linear-gradient(135deg,#4facfe,#00f2fe)}
+    </style>
+</head>
+<body>
+<script>if(localStorage.getItem('das_admin_logged')!=='true'){window.location.href='./';}</script>
+
+<button type="button" class="mobile-menu-btn" onclick="toggleSidebar()" title="Toggle menu"><i class="fas fa-bars"></i></button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="admin-wrapper">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><img src="../images/dubai-approvals.png" alt="Logo"></div>
+            <div class="sidebar-brand"><h2>Dubai Approval</h2><span>Services</span></div>
+        </div>
+        <nav class="sidebar-menu">
+            <div class="menu-section">OVERVIEW</div>
+            <a href="dashboard" class="menu-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+            <a href="messages" class="menu-item active"><i class="fas fa-envelope"></i><span>Messages</span><span class="badge alert d-none" id="sidebarBadge">0</span></a>
+            <a href="analytics" class="menu-item"><i class="fas fa-chart-line"></i><span>Live Analytics</span></a>
+            <a href="users" class="menu-item"><i class="fas fa-users-cog"></i><span>Manage Users</span></a>
+            <div class="menu-section">QUICK LINKS</div>
+            <a href="https://analytics.google.com/" target="_blank" rel="noopener" class="menu-item"><i class="fab fa-google"></i><span>Google Analytics</span></a>
+            <a href="https://search.google.com/search-console" target="_blank" rel="noopener" class="menu-item"><i class="fas fa-search"></i><span>Search Console</span></a>
+            <a href="https://www.bing.com/webmasters" target="_blank" rel="noopener" class="menu-item"><i class="fab fa-microsoft"></i><span>Bing Webmaster</span></a>
+            <div class="menu-divider"></div>
+            <a href="../" class="menu-item" target="_blank"><i class="fas fa-external-link-alt"></i><span>View Site</span></a>
+            <a href="javascript:void(0)" class="menu-item" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            <h1 class="page-title"><i class="fas fa-envelope admin-text-brand"></i> Messages</h1>
+            <div class="header-actions">
+                <button class="header-btn btn-outline" onclick="markAllRead()" title="Mark all as read"><i class="fas fa-check-double"></i> Mark All Read</button>
+                <button class="header-btn btn-primary" onclick="loadMessages()" title="Refresh"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="msg-stats">
+            <div class="msg-stat">
+                <div class="msg-stat-icon admin-grad-purple"><i class="fas fa-envelope"></i></div>
+                <div><h3 id="totalCount">-</h3><p>Total Messages</p></div>
+            </div>
+            <div class="msg-stat">
+                <div class="msg-stat-icon admin-grad-gold"><i class="fas fa-envelope-open"></i></div>
+                <div><h3 id="unreadCount">-</h3><p>Unread</p></div>
+            </div>
+            <div class="msg-stat">
+                <div class="msg-stat-icon admin-grad-blue"><i class="fas fa-clock"></i></div>
+                <div><h3 id="todayCount">-</h3><p>Today</p></div>
+            </div>
+        </div>
+
+        <!-- Messages Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-inbox"></i> Inbox</h3>
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterMessages('all',this)">All</button>
+                <button class="filter-tab" onclick="filterMessages('unread',this)">Unread</button>
+                <button class="filter-tab" onclick="filterMessages('read',this)">Read</button>
+            </div>
+            <div class="card-body">
+                <div class="message-list" id="messageList">
+                    <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading messages...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Message Detail Modal -->
+<div class="modal-overlay" id="msgModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="modal-header-info">
+                <h2 id="modalName">-</h2>
+                <p id="modalDate">-</p>
+            </div>
+            <button class="modal-close" onclick="closeModal()" title="Close"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value" id="modalEmail">-</div></div>
+            <div class="detail-row"><div class="detail-label">Phone</div><div class="detail-value" id="modalPhone">-</div></div>
+            <div class="detail-row"><div class="detail-label">Service</div><div class="detail-value"><span class="msg-service" id="modalService">-</span></div></div>
+            <div class="detail-message" id="modalMessage">-</div>
+        </div>
+        <div class="modal-footer">
+            <button class="header-btn btn-outline" onclick="replyEmail()" title="Reply via email"><i class="fas fa-reply"></i> Reply</button>
+            <button class="header-btn btn-outline" onclick="callPhone()" title="Call"><i class="fas fa-phone"></i> Call</button>
+            <button class="header-btn btn-outline" onclick="whatsappMsg()" title="WhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+            <button class="header-btn btn-danger" onclick="deleteMessage(currentMsgId)" title="Delete"><i class="fas fa-trash"></i> Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <div class="toast-icon" id="toastIcon"><i class="fas fa-check-circle"></i></div>
+    <div class="toast-content">
+        <strong id="toastTitle">Success</strong>
+        <p id="toastBody">Action completed</p>
+    </div>
+</div>
+
+<script>
+var allMessages = [];
+var currentFilter = 'all';
+var currentMsgId = '';
+var currentMsgData = {};
+
+var avatarColors = ['#667eea','#c19a3e','#f093fb','#4facfe','#e74c3c','#2ecc71','#e67e22','#9b59b6','#1abc9c','#34495e'];
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('active');document.getElementById('overlay').classList.toggle('active')}
+function doLogout(){localStorage.removeItem('das_admin_logged');localStorage.removeItem('das_admin_user');window.location.href='./'}
+
+function loadMessages(){
+    fetch('api/messages.php?action=list')
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(!res.success) return;
+            allMessages = res.messages || [];
+            document.getElementById('totalCount').textContent = res.total;
+            document.getElementById('unreadCount').textContent = res.unread;
+
+            // Count today's messages
+            var today = new Date().toDateString();
+            var todayN = 0;
+            allMessages.forEach(function(m){
+                if(new Date(m.createdAt).toDateString() === today) todayN++;
+            });
+            document.getElementById('todayCount').textContent = todayN;
+
+            // Update sidebar badge
+            var badge = document.getElementById('sidebarBadge');
+            if(res.unread > 0){
+                badge.textContent = res.unread;
+                badge.classList.remove('d-none');
+            } else {
+                badge.classList.add('d-none');
+            }
+
+            renderMessages();
+        })
+        .catch(function(){
+            document.getElementById('messageList').innerHTML = '<div class="empty-state"><i class="fas fa-server"></i><h3>Cannot connect to server</h3><p>Make sure the PHP backend is running and accessible.</p></div>';
+        });
+}
+
+function renderMessages(){
+    var filtered = allMessages;
+    if(currentFilter === 'unread') filtered = allMessages.filter(function(m){return !m.read});
+    if(currentFilter === 'read') filtered = allMessages.filter(function(m){return m.read});
+
+    if(filtered.length === 0){
+        var emptyText = currentFilter === 'unread' ? 'No unread messages' : currentFilter === 'read' ? 'No read messages' : 'No messages yet';
+        document.getElementById('messageList').innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><h3>' + emptyText + '</h3><p>Messages from the contact form will appear here.</p></div>';
+        return;
+    }
+
+    var html = '';
+    filtered.forEach(function(msg, i){
+        var initials = msg.name ? msg.name.split(' ').map(function(w){return w[0]}).join('').substring(0,2).toUpperCase() : '?';
+        var color = avatarColors[i % avatarColors.length];
+        var timeStr = formatTime(msg.createdAt);
+        var unreadClass = msg.read ? '' : ' unread';
+        var nameClass = msg.read ? '' : ' unread';
+
+        html += '<div class="message-row' + unreadClass + '" onclick="openMessage(\'' + msg.id + '\')">';
+        html += '<div class="msg-avatar" style="background:' + color + '">' + initials + '</div>';
+        html += '<div class="msg-body">';
+        html += '<div class="msg-top"><span class="msg-name' + nameClass + '">' + escHtml(msg.name) + '</span><span class="msg-time">' + timeStr + '</span></div>';
+        if(msg.service && msg.service !== 'General Enquiry') html += '<span class="msg-service">' + escHtml(msg.service) + '</span>';
+        html += '<div class="msg-preview">' + escHtml(msg.message) + '</div>';
+        html += '<div class="msg-email">' + escHtml(msg.email) + '</div>';
+        html += '</div>';
+        html += '<div class="msg-actions">';
+        if(!msg.read) html += '<button class="msg-action-btn" onclick="event.stopPropagation();markRead(\'' + msg.id + '\')" title="Mark as read"><i class="fas fa-check"></i></button>';
+        html += '<button class="msg-action-btn delete" onclick="event.stopPropagation();deleteMessage(\'' + msg.id + '\')" title="Delete"><i class="fas fa-trash"></i></button>';
+        html += '</div>';
+        html += '</div>';
+    });
+    document.getElementById('messageList').innerHTML = html;
+}
+
+function filterMessages(filter, btn){
+    currentFilter = filter;
+    document.querySelectorAll('.filter-tab').forEach(function(t){t.classList.remove('active')});
+    btn.classList.add('active');
+    renderMessages();
+}
+
+function openMessage(id){
+    var msg = allMessages.find(function(m){return m.id === id});
+    if(!msg) return;
+
+    currentMsgId = id;
+    currentMsgData = msg;
+
+    document.getElementById('modalName').textContent = msg.name;
+    document.getElementById('modalDate').textContent = new Date(msg.createdAt).toLocaleString();
+    document.getElementById('modalEmail').innerHTML = '<a href="mailto:' + escHtml(msg.email) + '">' + escHtml(msg.email) + '</a>';
+    document.getElementById('modalPhone').innerHTML = msg.phone ? '<a href="tel:' + escHtml(msg.phone) + '">' + escHtml(msg.phone) + '</a>' : 'Not provided';
+    document.getElementById('modalService').textContent = msg.service || 'General Enquiry';
+    document.getElementById('modalMessage').textContent = msg.message;
+
+    document.getElementById('msgModal').classList.add('show');
+
+    // Mark as read
+    if(!msg.read) markRead(id);
+}
+
+function closeModal(){
+    document.getElementById('msgModal').classList.remove('show');
+}
+
+function markRead(id){
+    fetch('api/messages.php?action=read&id=' + encodeURIComponent(id))
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(res.success) loadMessages();
+        });
+}
+
+function markAllRead(){
+    fetch('api/messages.php?action=mark_all_read')
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(res.success){
+                showToast('All Read', 'All messages marked as read', '#4caf50');
+                loadMessages();
+            }
+        });
+}
+
+function deleteMessage(id){
+    if(!confirm('Are you sure you want to delete this message?')) return;
+    fetch('api/messages.php?action=delete&id=' + encodeURIComponent(id))
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(res.success){
+                closeModal();
+                showToast('Deleted', 'Message deleted successfully', '#e74c3c');
+                loadMessages();
+            }
+        });
+}
+
+function replyEmail(){
+    if(currentMsgData.email) window.open('mailto:' + currentMsgData.email + '?subject=Re: ' + encodeURIComponent(currentMsgData.service || 'Your Enquiry') + ' - Dubai Approval Services');
+}
+function callPhone(){
+    if(currentMsgData.phone) window.open('tel:' + currentMsgData.phone);
+    else showToast('No Phone', 'No phone number provided', '#e67e22');
+}
+function whatsappMsg(){
+    if(currentMsgData.phone){
+        var num = currentMsgData.phone.replace(/[^0-9]/g,'');
+        window.open('https://wa.me/' + num + '?text=' + encodeURIComponent('Hello ' + currentMsgData.name + ', thank you for contacting Dubai Approval Services regarding ' + (currentMsgData.service || 'your enquiry') + '. '));
+    } else {
+        showToast('No Phone', 'No phone number provided for WhatsApp', '#e67e22');
+    }
+}
+
+function formatTime(dateStr){
+    var d = new Date(dateStr);
+    var now = new Date();
+    var diff = now - d;
+    if(diff < 60000) return 'Just now';
+    if(diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+    if(diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
+    if(diff < 172800000) return 'Yesterday';
+    return d.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+}
+
+function escHtml(str){
+    if(!str) return '';
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function showToast(title, body, color){
+    var t = document.getElementById('toast');
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastBody').textContent = body;
+    document.getElementById('toastIcon').style.background = (color || 'rgba(193,154,62,0.1)');
+    document.getElementById('toastIcon').style.color = '#fff';
+    t.style.borderLeftColor = color || '#c19a3e';
+    t.classList.add('show');
+    setTimeout(function(){t.classList.remove('show')}, 4000);
+}
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e){if(e.key === 'Escape') closeModal()});
+// Close modal on overlay click
+document.getElementById('msgModal').addEventListener('click', function(e){if(e.target === this) closeModal()});
+
+// Load on start
+loadMessages();
+// Auto refresh every 30 seconds
+setInterval(loadMessages, 30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Manager - Dubai Approval Services Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../images/dubai-approvals.png">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Source Sans Pro',sans-serif;background:#f5f6fa;min-height:100vh}
+        .admin-wrapper{display:flex;min-height:100vh}
+
+        /* Sidebar */
+        .sidebar{width:250px;background:linear-gradient(180deg,#1a1a2e 0%,#16213e 100%);color:#fff;position:fixed;height:100vh;overflow-y:auto;z-index:100}
+        .sidebar-header{padding:20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.1)}
+        .sidebar-logo{width:45px;height:45px;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,0.2)}
+        .sidebar-logo img{width:100%;height:100%;object-fit:cover}
+        .sidebar-brand h2{font-size:1rem;font-weight:600}
+        .sidebar-brand span{font-size:0.75rem;opacity:0.7}
+        .sidebar-menu{padding:15px 0}
+        .menu-section{font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;padding:15px 20px 8px;opacity:0.5}
+        .menu-item{display:flex;align-items:center;gap:12px;padding:12px 20px;color:rgba(255,255,255,0.7);text-decoration:none;transition:all 0.3s ease;border-left:3px solid transparent;position:relative}
+        .menu-item:hover{background:rgba(255,255,255,0.1);color:#fff;border-left-color:#c19a3e}
+        .menu-item.active{background:linear-gradient(90deg,rgba(193,154,62,0.3),transparent);color:#fff;border-left-color:#c19a3e}
+        .menu-item i{width:20px;text-align:center;font-size:1.1rem}
+        .menu-item .badge{background:linear-gradient(135deg,#c19a3e,#d4af37);font-size:0.7rem;padding:3px 10px;border-radius:12px;margin-left:auto;box-shadow:0 2px 8px rgba(193,154,62,0.4)}
+        .menu-item .badge.alert{background:linear-gradient(135deg,#e74c3c,#c0392b);box-shadow:0 2px 8px rgba(231,76,60,0.4);animation:badgePulse 2s infinite}
+        .menu-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);margin:15px 20px}
+        @keyframes badgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+
+        /* Main Content */
+        .main-content{flex:1;margin-left:250px;padding:20px}
+        .top-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;background:#fff;padding:20px 25px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.05);animation:fadeInDown 0.5s ease}
+        .page-title{font-size:1.5rem;color:#1a1a2e;font-weight:700;display:flex;align-items:center;gap:12px}
+
+        /* Cards */
+        .card{background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:20px;animation:fadeInUp 0.5s ease backwards}
+        .card-header{padding:20px 25px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+        .card-header h3{font-size:1rem;color:#1a1a2e;display:flex;align-items:center;gap:10px;font-weight:600}
+        .card-header h3 i{color:#c19a3e}
+        .card-body{padding:20px 25px}
+
+        /* Buttons */
+        .btn{padding:10px 20px;border:none;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:600;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px;font-family:inherit}
+        .btn-primary{background:linear-gradient(135deg,#c19a3e,#d4af37);color:#fff;box-shadow:0 4px 15px rgba(193,154,62,0.3)}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(193,154,62,0.4)}
+        .btn-secondary{background:#f0f0f0;color:#555}
+        .btn-secondary:hover{background:#e0e0e0}
+        .btn-danger{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;box-shadow:0 4px 15px rgba(231,76,60,0.3)}
+        .btn-danger:hover{transform:translateY(-2px)}
+        .btn-sm{padding:6px 14px;font-size:0.8rem}
+        .btn-edit{background:#e8f4fd;color:#2980b9}
+        .btn-edit:hover{background:#d0ebfa}
+
+        /* Table */
+        .data-table{width:100%;border-collapse:collapse}
+        .data-table th,.data-table td{padding:15px;text-align:left;border-bottom:1px solid #f0f0f0}
+        .data-table th{font-size:0.8rem;text-transform:uppercase;color:#777;font-weight:600;background:#f8f9fa}
+        .data-table tr{transition:all 0.3s}
+        .data-table tr:hover{background:#fdf8f0}
+        .post-title-cell{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .status-badge{padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;display:inline-block}
+        .status-published{background:rgba(76,175,80,0.1);color:#4caf50}
+        .status-draft{background:rgba(255,152,0,0.1);color:#ff9800}
+        .post-image-thumb{width:60px;height:40px;border-radius:6px;object-fit:cover}
+
+        /* Form */
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;font-weight:600;margin-bottom:8px;color:#1a1a2e;font-size:0.9rem}
+        .form-control{width:100%;padding:12px 16px;border:2px solid #e8e8e8;border-radius:10px;font-size:0.95rem;font-family:inherit;transition:border-color 0.3s}
+        .form-control:focus{outline:none;border-color:#c19a3e}
+        textarea.form-control{min-height:120px;resize:vertical}
+        select.form-control{appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23777' d='M6 8L1 3h10z'/%3E%3C/svg%3E") no-repeat right 16px center;background-size:12px;padding-right:40px}
+
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+        /* Image Upload */
+        .image-upload-area{border:2px dashed #ddd;border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative}
+        .image-upload-area:hover{border-color:#c19a3e;background:#fdf8f0}
+        .image-upload-area.has-image{padding:10px}
+        .image-upload-area img{max-width:100%;max-height:200px;border-radius:8px}
+        .image-upload-area .upload-icon{font-size:2rem;color:#ccc;margin-bottom:10px}
+        .image-upload-area .upload-text{color:#999;font-size:0.9rem}
+        .image-upload-area input[type="file"]{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer}
+
+        /* Toast */
+        .toast{position:fixed;bottom:20px;right:20px;background:#fff;border-radius:12px;padding:15px 20px;box-shadow:0 8px 30px rgba(0,0,0,0.15);display:flex;align-items:center;gap:12px;z-index:999;transform:translateY(100px);opacity:0;transition:all 0.4s ease;border-left:4px solid #c19a3e}
+        .toast.show{transform:translateY(0);opacity:1}
+        .toast.error{border-left-color:#e74c3c}
+        .toast-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(193,154,62,0.1);color:#c19a3e;font-size:1.1rem}
+        .toast.error .toast-icon{background:rgba(231,76,60,0.1);color:#e74c3c}
+        .toast-content{flex:1}
+        .toast-content strong{display:block;color:#1a1a2e;margin-bottom:2px}
+        .toast-content p{font-size:0.85rem;color:#777}
+
+        /* Modal */
+        .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:200;justify-content:center;align-items:center}
+        .modal-overlay.active{display:flex}
+        .modal{background:#fff;border-radius:16px;width:90%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:fadeInUp 0.3s ease}
+        .modal-header{padding:20px 25px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+        .modal-header h3{font-size:1.1rem;color:#1a1a2e;font-weight:700}
+        .modal-close{background:none;border:none;font-size:1.5rem;color:#aaa;cursor:pointer;padding:5px}
+        .modal-body{padding:25px}
+        .modal-footer{padding:15px 25px;border-top:1px solid #f0f0f0;display:flex;justify-content:flex-end;gap:10px}
+
+        /* View toggle */
+        .view-toggle{display:flex;gap:10px;align-items:center}
+
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+        /* Responsive */
+        @media(max-width:992px){
+            .sidebar{width:70px}.sidebar-brand,.menu-section,.menu-item span,.menu-item .badge{display:none}
+            .sidebar-header{justify-content:center;padding:15px}.menu-item{justify-content:center;padding:15px}
+            .main-content{margin-left:70px}
+            .form-row{grid-template-columns:1fr}
+        }
+        @media(max-width:768px){
+            .sidebar{transform:translateX(-100%);width:250px;transition:0.3s}.sidebar.active{transform:translateX(0)}
+            .sidebar-brand,.menu-section,.menu-item span,.menu-item .badge{display:block}
+            .main-content{margin-left:0}
+            .top-header{flex-direction:column;gap:15px;text-align:center}
+            .data-table{font-size:0.85rem}
+            .data-table th:nth-child(3),.data-table td:nth-child(3),.data-table th:nth-child(5),.data-table td:nth-child(5){display:none}
+        }
+        .mobile-menu-btn{display:none;position:fixed;top:15px;left:15px;z-index:101;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;border:none;padding:12px 15px;border-radius:10px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.2)}
+        @media(max-width:768px){.mobile-menu-btn{display:block}}
+        .overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:99}.overlay.active{display:block}
+
+        .empty-state{text-align:center;padding:60px 20px;color:#999}
+        .empty-state i{font-size:3rem;margin-bottom:15px;opacity:0.3}
+        .empty-state p{font-size:1rem;margin-bottom:20px}
+        .seo-section{background:#f8f9fa;border-radius:12px;padding:20px;margin-top:10px}
+        .seo-section h4{font-size:0.9rem;color:#555;margin-bottom:15px;display:flex;align-items:center;gap:8px}
+        .char-count{font-size:0.75rem;color:#aaa;margin-top:4px}
+
+        /* Admin utility classes */
+        .admin-text-brand{color:#c19a3e}
+        .admin-text-count{color:#999;font-size:0.85rem}
+        .admin-no-pad{padding:0}
+        .admin-btn-publish{background:linear-gradient(135deg,#4caf50,#45a049);box-shadow:0 4px 15px rgba(76,175,80,0.3)}
+        .admin-mb0{margin-bottom:0}
+        .admin-delete-warn{color:#e74c3c;margin-top:10px;font-size:0.9rem}
+    </style>
+</head>
+<body>
+<script>if(localStorage.getItem('das_admin_logged')!=='true'){window.location.href='./';}</script>
+
+<button type="button" class="mobile-menu-btn" onclick="toggleSidebar()" title="Toggle menu"><i class="fas fa-bars"></i></button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="admin-wrapper">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><img src="../images/dubai-approvals.png" alt="Logo"></div>
+            <div class="sidebar-brand"><h2>Dubai Approval</h2><span>Services</span></div>
+        </div>
+        <nav class="sidebar-menu">
+            <div class="menu-section">OVERVIEW</div>
+            <a href="dashboard" class="menu-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+            <a href="messages" class="menu-item"><i class="fas fa-envelope"></i><span>Messages</span><span class="badge alert" id="msgBadge" class="d-none">0</span></a>
+            <a href="analytics" class="menu-item"><i class="fas fa-chart-line"></i><span>Live Analytics</span></a>
+            <a href="users" class="menu-item"><i class="fas fa-users-cog"></i><span>Manage Users</span></a>
+            <a href="blog" class="menu-item active"><i class="fas fa-blog"></i><span>Blog Manager</span></a>
+            <div class="menu-section">QUICK LINKS</div>
+            <a href="https://analytics.google.com/" target="_blank" rel="noopener" class="menu-item"><i class="fab fa-google"></i><span>Google Analytics</span></a>
+            <a href="https://search.google.com/search-console" target="_blank" rel="noopener" class="menu-item"><i class="fas fa-search"></i><span>Search Console</span></a>
+            <a href="https://www.bing.com/webmasters" target="_blank" rel="noopener" class="menu-item"><i class="fab fa-microsoft"></i><span>Bing Webmaster</span></a>
+            <div class="menu-divider"></div>
+            <a href="../" class="menu-item" target="_blank"><i class="fas fa-external-link-alt"></i><span>View Site</span></a>
+            <a href="javascript:void(0)" class="menu-item" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <!-- LIST VIEW -->
+        <div id="listView">
+            <header class="top-header">
+                <h1 class="page-title"><i class="fas fa-blog admin-text-brand"></i> Blog Manager</h1>
+                <button class="btn btn-primary" onclick="showEditor()"><i class="fas fa-plus"></i> New Post</button>
+            </header>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list"></i> All Blog Posts</h3>
+                    <span id="postCount" class="admin-text-count"></span>
+                </div>
+                <div class="card-body admin-no-pad">
+                    <div id="postsTable">
+                        <div class="empty-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading posts...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EDITOR VIEW -->
+        <div id="editorView" class="d-none">
+            <header class="top-header">
+                <h1 class="page-title"><i class="fas fa-edit admin-text-brand"></i> <span id="editorTitle">New Blog Post</span></h1>
+                <div class="view-toggle">
+                    <button class="btn btn-secondary" onclick="showList()"><i class="fas fa-arrow-left"></i> Back to List</button>
+                    <button class="btn btn-primary" onclick="savePost('draft')"><i class="fas fa-save"></i> Save Draft</button>
+                    <button class="btn btn-primary" onclick="savePost('published')" class="admin-btn-publish"><i class="fas fa-globe"></i> Publish</button>
+                </div>
+            </header>
+
+            <div class="card">
+                <div class="card-body">
+                    <input type="hidden" id="postId" value="">
+
+                    <div class="form-group">
+                        <label>Post Title *</label>
+                        <input type="text" id="postTitleInput" class="form-control" placeholder="Enter blog post title...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Excerpt / Summary</label>
+                        <textarea id="postExcerpt" class="form-control" rows="3" placeholder="Short description shown on blog listing page..."></textarea>
+                        <div class="char-count"><span id="excerptCount">0</span>/180 characters recommended</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Featured Image</label>
+                            <div class="image-upload-area" id="imageUploadArea">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <div class="upload-text">Click or drag to upload image<br><small>JPG, PNG, WebP - Max 5MB</small></div>
+                                <input type="file" id="imageInput" accept="image/*" onchange="uploadImage(this)" aria-label="Upload featured image">
+                            </div>
+                            <input type="hidden" id="postImage" value="">
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="postDate">Publish Date</label>
+                                <input type="date" id="postDate" class="form-control" aria-label="Publish Date">
+                            </div>
+                            <div class="form-group">
+                                <label for="postAuthor">Author</label>
+                                <input type="text" id="postAuthor" class="form-control" value="Admin" aria-label="Author">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="postContent">Content *</label>
+                        <textarea id="postContent" aria-label="Blog post content"></textarea>
+                    </div>
+
+                    <div class="seo-section">
+                        <h4><i class="fas fa-search"></i> SEO Settings</h4>
+                        <div class="form-group">
+                            <label>Meta Title</label>
+                            <input type="text" id="metaTitle" class="form-control" placeholder="SEO title (defaults to post title)">
+                            <div class="char-count"><span id="metaTitleCount">0</span>/60 characters recommended</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Meta Description</label>
+                            <textarea id="metaDescription" class="form-control" rows="2" placeholder="SEO description for search engines..."></textarea>
+                            <div class="char-count"><span id="metaDescCount">0</span>/160 characters recommended</div>
+                        </div>
+                        <div class="form-group admin-mb0">
+                            <label>Meta Keywords</label>
+                            <input type="text" id="metaKeywords" class="form-control" placeholder="Comma-separated keywords (e.g. dubai approvals, construction permits)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Delete Blog Post</h3>
+            <button class="modal-close" onclick="closeDeleteModal()" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete "<strong id="deletePostName"></strong>"?</p>
+            <p class="admin-delete-warn"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+            <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()"><i class="fas fa-trash"></i> Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <div class="toast-icon"><i class="fas fa-check-circle"></i></div>
+    <div class="toast-content">
+        <strong id="toastTitle">Success</strong>
+        <p id="toastBody">Operation completed</p>
+    </div>
+</div>
+
+<script>
+var allPosts = [];
+var deletePostId = null;
+var editorInitialized = false;
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('active');document.getElementById('overlay').classList.toggle('active')}
+function doLogout(){localStorage.removeItem('das_admin_logged');localStorage.removeItem('das_admin_user');window.location.href='./'}
+
+// Initialize TinyMCE
+function initEditor() {
+    if (editorInitialized) return;
+    tinymce.init({
+        selector: '#postContent',
+        height: 450,
+        menubar: 'file edit insert view format table',
+        plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table wordcount',
+        toolbar: 'undo redo | blocks | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | removeformat code',
+        content_style: 'body { font-family: "Source Sans Pro", Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; }',
+        branding: false,
+        promotion: false,
+        relative_urls: false,
+        remove_script_host: false
+    });
+    editorInitialized = true;
+}
+
+// Load posts list
+function loadPosts() {
+    fetch('api/blog.php?action=list')
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+            if (!res.success) { showToast('Error', res.message || 'Failed to load posts', true); return; }
+            allPosts = res.posts;
+            renderPosts();
+        })
+        .catch(function(err){ showToast('Error', 'Failed to load posts', true); });
+}
+
+function renderPosts() {
+    var container = document.getElementById('postsTable');
+    document.getElementById('postCount').textContent = allPosts.length + ' post' + (allPosts.length !== 1 ? 's' : '');
+
+    if (allPosts.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-blog"></i><p>No blog posts yet. Create your first post!</p><button class="btn btn-primary" onclick="showEditor()"><i class="fas fa-plus"></i> New Post</button></div>';
+        return;
+    }
+
+    // Sort by date descending
+    var sorted = allPosts.slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+
+    var html = '<table class="data-table"><thead><tr><th>Image</th><th>Title</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+    sorted.forEach(function(post) {
+        var statusClass = post.status === 'published' ? 'status-published' : 'status-draft';
+        var dateStr = new Date(post.date).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+        var legacy = post.is_legacy ? ' <small style="color:#999">(original)</small>' : '';
+        html += '<tr>';
+        html += '<td><img src="../' + escHtml(post.image) + '" class="post-image-thumb" alt="" onerror="this.style.display=\'none\'"></td>';
+        html += '<td class="post-title-cell"><strong>' + escHtml(post.title) + '</strong>' + legacy + '</td>';
+        html += '<td>' + dateStr + '</td>';
+        html += '<td><span class="status-badge ' + statusClass + '">' + post.status + '</span></td>';
+        html += '<td>';
+        html += '<button class="btn btn-edit btn-sm" onclick="editPost(' + post.id + ')" title="Edit"><i class="fas fa-edit"></i></button> ';
+        if (post.status === 'published') {
+            html += '<a href="../' + post.slug + '" target="_blank" class="btn btn-secondary btn-sm" title="View"><i class="fas fa-external-link-alt"></i></a> ';
+        }
+        html += '<button class="btn btn-danger btn-sm" onclick="deletePost(' + post.id + ',\'' + escHtml(post.title).replace(/'/g, "\\'") + '\')" title="Delete"><i class="fas fa-trash"></i></button>';
+        html += '</td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
+
+// Show editor
+function showEditor(postId) {
+    document.getElementById('listView').style.display = 'none';
+    document.getElementById('editorView').classList.remove('d-none');
+    initEditor();
+
+    if (!postId) {
+        // New post
+        document.getElementById('editorTitle').textContent = 'New Blog Post';
+        document.getElementById('postId').value = '';
+        document.getElementById('postTitleInput').value = '';
+        document.getElementById('postExcerpt').value = '';
+        document.getElementById('postImage').value = '';
+        document.getElementById('postDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('postAuthor').value = 'Admin';
+        document.getElementById('metaTitle').value = '';
+        document.getElementById('metaDescription').value = '';
+        document.getElementById('metaKeywords').value = '';
+        resetImageUpload();
+        if (tinymce.get('postContent')) tinymce.get('postContent').setContent('');
+    }
+}
+
+function showList() {
+    document.getElementById('editorView').classList.add('d-none');
+    document.getElementById('listView').style.display = 'block';
+    loadPosts();
+}
+
+// Edit post
+function editPost(id) {
+    fetch('api/blog.php?action=get&id=' + id)
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+            if (!res.success) { showToast('Error', res.message || 'Post not found', true); return; }
+            var post = res.post;
+
+            document.getElementById('listView').style.display = 'none';
+            document.getElementById('editorView').classList.remove('d-none');
+            initEditor();
+
+            document.getElementById('editorTitle').textContent = 'Edit: ' + post.title;
+            document.getElementById('postId').value = post.id;
+            document.getElementById('postTitleInput').value = post.title;
+            document.getElementById('postExcerpt').value = post.excerpt || '';
+            document.getElementById('postImage').value = post.image || '';
+            document.getElementById('postDate').value = post.date;
+            document.getElementById('postAuthor').value = post.author || 'Admin';
+            document.getElementById('metaTitle').value = post.meta_title || '';
+            document.getElementById('metaDescription').value = post.meta_description || '';
+            document.getElementById('metaKeywords').value = post.meta_keywords || '';
+
+            // Set image preview
+            if (post.image) {
+                var area = document.getElementById('imageUploadArea');
+                area.classList.add('has-image');
+                area.innerHTML = '<img src="../' + escHtml(post.image) + '" alt="Preview"><input type="file" id="imageInput" accept="image/*" onchange="uploadImage(this)">';
+            } else {
+                resetImageUpload();
+            }
+
+            // Set editor content (TinyMCE may need a moment)
+            var checkEditor = setInterval(function() {
+                var editor = tinymce.get('postContent');
+                if (editor) {
+                    if (post.is_legacy && !post.content) {
+                        editor.setContent('<p><em>This is an original blog post. The content is in the static HTML file. Edit the content here to manage it via the admin panel.</em></p>');
+                    } else {
+                        editor.setContent(post.content || '');
+                    }
+                    clearInterval(checkEditor);
+                }
+            }, 200);
+        })
+        .catch(function(err){ showToast('Error', 'Failed to load post', true); });
+}
+
+// Save post
+function savePost(status) {
+    var editor = tinymce.get('postContent');
+    var content = editor ? editor.getContent() : '';
+    var title = document.getElementById('postTitleInput').value.trim();
+
+    if (!title) { showToast('Error', 'Post title is required', true); return; }
+    if (!content || content === '<p><em>This is an original blog post. The content is in the static HTML file. Edit the content here to manage it via the admin panel.</em></p>') {
+        if (status === 'published' && !document.getElementById('postId').value) {
+            showToast('Error', 'Post content is required to publish', true);
+            return;
+        }
+    }
+
+    var data = {
+        title: title,
+        excerpt: document.getElementById('postExcerpt').value.trim(),
+        content: content,
+        image: document.getElementById('postImage').value,
+        date: document.getElementById('postDate').value,
+        author: document.getElementById('postAuthor').value.trim() || 'Admin',
+        meta_title: document.getElementById('metaTitle').value.trim(),
+        meta_description: document.getElementById('metaDescription').value.trim(),
+        meta_keywords: document.getElementById('metaKeywords').value.trim(),
+        status: status
+    };
+
+    var postId = document.getElementById('postId').value;
+    var action = postId ? 'edit' : 'add';
+    if (postId) data.id = parseInt(postId);
+
+    fetch('api/blog.php?action=' + action, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+        if (res.success) {
+            showToast('Success', res.message || 'Post saved!');
+            if (res.post) document.getElementById('postId').value = res.post.id;
+            document.getElementById('editorTitle').textContent = 'Edit: ' + title;
+        } else {
+            showToast('Error', res.message || 'Failed to save post', true);
+        }
+    })
+    .catch(function(err){ showToast('Error', 'Failed to save post', true); });
+}
+
+// Image upload
+function uploadImage(input) {
+    if (!input.files || !input.files[0]) return;
+    var formData = new FormData();
+    formData.append('image', input.files[0]);
+
+    var area = document.getElementById('imageUploadArea');
+    area.innerHTML = '<div class="upload-icon"><i class="fas fa-spinner fa-spin"></i></div><div class="upload-text">Uploading...</div><input type="file" id="imageInput" accept="image/*" onchange="uploadImage(this)">';
+
+    fetch('api/blog.php?action=upload_image', {
+        method: 'POST',
+        body: formData
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+        if (res.success) {
+            document.getElementById('postImage').value = res.path;
+            area.classList.add('has-image');
+            area.innerHTML = '<img src="../' + escHtml(res.path) + '" alt="Preview"><input type="file" id="imageInput" accept="image/*" onchange="uploadImage(this)">';
+            showToast('Success', 'Image uploaded');
+        } else {
+            showToast('Error', res.message || 'Upload failed', true);
+            resetImageUpload();
+        }
+    })
+    .catch(function(err){ showToast('Error', 'Upload failed', true); resetImageUpload(); });
+}
+
+function resetImageUpload() {
+    var area = document.getElementById('imageUploadArea');
+    area.classList.remove('has-image');
+    area.innerHTML = '<div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div><div class="upload-text">Click or drag to upload image<br><small>JPG, PNG, WebP - Max 5MB</small></div><input type="file" id="imageInput" accept="image/*" onchange="uploadImage(this)">';
+}
+
+// Delete post
+function deletePost(id, title) {
+    deletePostId = id;
+    document.getElementById('deletePostName').textContent = title;
+    document.getElementById('deleteModal').classList.add('active');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('active');
+    deletePostId = null;
+}
+
+function confirmDelete() {
+    if (!deletePostId) return;
+    fetch('api/blog.php?action=delete', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id: deletePostId})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+        if (res.success) {
+            showToast('Success', 'Post deleted');
+            closeDeleteModal();
+            loadPosts();
+        } else {
+            showToast('Error', res.message || 'Failed to delete', true);
+        }
+    })
+    .catch(function(err){ showToast('Error', 'Failed to delete', true); });
+}
+
+// Toast
+function showToast(title, body, isError) {
+    var t = document.getElementById('toast');
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastBody').textContent = body;
+    t.className = 'toast' + (isError ? ' error' : '');
+    t.querySelector('.toast-icon i').className = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 4000);
+}
+
+// Character counters
+document.getElementById('postExcerpt').addEventListener('input', function(){ document.getElementById('excerptCount').textContent = this.value.length; });
+document.getElementById('metaTitle').addEventListener('input', function(){ document.getElementById('metaTitleCount').textContent = this.value.length; });
+document.getElementById('metaDescription').addEventListener('input', function(){ document.getElementById('metaDescCount').textContent = this.value.length; });
+
+function escHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str || ''));
+    return div.innerHTML;
+}
+
+// Message badge
+function loadMsgBadge(){
+    fetch('api/messages.php?action=count')
+        .then(function(r){return r.json()})
+        .then(function(res){
+            if(res.success){
+                var b=document.getElementById('msgBadge');
+                if(b){if(res.unread>0){b.textContent=res.unread;b.classList.remove('d-none');}else{b.classList.add('d-none');}}
+            }
+        }).catch(function(){});
+}
+loadMsgBadge();
+
+// Initial load
+loadPosts();
+</script>
+</body>
+</html>

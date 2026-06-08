@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+# Editor / tooling
+.vscode/
+*.code-workspace
+.playwright-mcp/
+# Dependencies / logs
+node_modules/
+*.log
+
+# Windows reserved device file (cannot be tracked)
+nul
+/nul

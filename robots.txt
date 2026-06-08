@@ -1,0 +1,21 @@
+# robots.txt for Dubai Approval Services
+# https://www.dubaiapprovalservices.com
+
+User-agent: *
+Allow: /
+
+# Disallow admin directory
+Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://www.dubaiapprovalservices.com/sitemap.xml
+
+# Allow all search engines to crawl
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
