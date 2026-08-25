@@ -19,7 +19,7 @@ require_once __DIR__ . '/config.php';
  */
 if (!function_exists('das_forward_central')) {
     function das_forward_central(array $fields) {
-        $endpoint = 'https://www.dasandpartnersengineering.com/leads/api/submit.php';
+        $endpoint = 'https://www.dasandpartnersengineering.com/api/contact';
         $payload  = json_encode($fields);
         try {
             if (function_exists('curl_init')) {
@@ -29,8 +29,10 @@ if (!function_exists('das_forward_central')) {
                     CURLOPT_POSTFIELDS     => $payload,
                     CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
                     CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_TIMEOUT        => 4,
-                    CURLOPT_CONNECTTIMEOUT => 3,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_POSTREDIR      => 7,
+                    CURLOPT_TIMEOUT        => 8,
+                    CURLOPT_CONNECTTIMEOUT => 5,
                 ]);
                 curl_exec($ch);
                 curl_close($ch);
@@ -100,7 +102,7 @@ file_put_contents(MESSAGES_FILE, json_encode($messages, JSON_PRETTY_PRINT));
 
 // Mirror to the DAS central leads inbox (best-effort)
 das_forward_central([
-    'site'      => 'dubai-approval',
+    'source'    => 'dubai-approval',
     'form_type' => 'contact',
     'name'      => $name,
     'email'     => $email,
