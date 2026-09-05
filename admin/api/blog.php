@@ -673,7 +673,7 @@ function generate_blog_detail_html($post, $all_posts) {
                 <li style="color: #FFFFFF;">Office 3409, 34th Floor, The Citadel Tower, Business Bay,<br>Dubai</li>
                 <li><a href="mailto:info@dubaiapprovalservices.com" style="color: #FFFFFF;">info@dubaiapprovalservices.com</a></li>
                 <li><a href="tel:+97142851590" style="color:#FFFFFF;">+97142851590</a></li>
-                <li><a href="tel:+971542323854" style="color:#FFFFFF;">+971 54 232 3854</a></li>
+                <li><a href="tel:+971503512542" style="color:#FFFFFF;">+971 50 351 2542</a></li>
               </ul>
             </div>
           </div>
@@ -729,7 +729,7 @@ function generate_blog_detail_html($post, $all_posts) {
 
 <div class="contact-buttons">
   <a href="tel:+97142851590" class="contact-button call-button"> <img src="images/call now.png" alt="Call Now"> </a>
-  <a href="https://wa.me/+971542323854" class="contact-button whatsapp-button" target="_blank"> <img src="images/whatsapp.png" alt="WhatsApp"> </a>
+  <a href="https://wa.me/+971503512542" class="contact-button whatsapp-button" target="_blank"> <img src="images/whatsapp.png" alt="WhatsApp"> </a>
 </div>
 </body>
 
