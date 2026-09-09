@@ -14,8 +14,10 @@ header('Access-Control-Allow-Methods: POST');
 require_once __DIR__ . '/config.php';
 
 /**
- * Mirror this enquiry into the DAS central leads inbox (dasandpartnersengineering.com).
- * Best-effort and time-boxed so it never blocks or breaks the visitor's submission.
+ * Send this enquiry to the DAS central leads inbox (dasandpartnersengineering.com).
+ * This is the authoritative destination, not a mirror: the caller MUST surface a
+ * failure to the visitor rather than reporting success for a lead that never landed.
+ * Returns true only on a 2xx response from /api/contact.
  */
 if (!function_exists('das_forward_central')) {
     function das_forward_central(array $fields) {
@@ -35,13 +37,21 @@ if (!function_exists('das_forward_central')) {
                     CURLOPT_CONNECTTIMEOUT => 5,
                 ]);
                 curl_exec($ch);
+                $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
-            } else {
-                @file_get_contents($endpoint, false, stream_context_create([
-                    'http' => ['method' => 'POST', 'header' => "Content-Type: application/json\r\n", 'content' => $payload, 'timeout' => 4],
-                ]));
+                return ($code >= 200 && $code < 300);
             }
-        } catch (Throwable $e) { /* best-effort; ignore */ }
+            $resp = @file_get_contents($endpoint, false, stream_context_create([
+                'http' => ['method' => 'POST', 'header' => "Content-Type: application/json\r\n", 'content' => $payload, 'timeout' => 8, 'ignore_errors' => true],
+            ]));
+            if (isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m)) {
+                $c = (int) $m[1];
+                return ($c >= 200 && $c < 300);
+            }
+            return ($resp !== false);
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 }
 
@@ -100,8 +110,8 @@ if (file_exists(MESSAGES_FILE)) {
 array_unshift($messages, $new_message); // Add to beginning
 file_put_contents(MESSAGES_FILE, json_encode($messages, JSON_PRETTY_PRINT));
 
-// Mirror to the DAS central leads inbox (best-effort)
-das_forward_central([
+// Send to the DAS central leads inbox (authoritative destination)
+$central_ok = das_forward_central([
     'source'    => 'dubai-approval',
     'form_type' => 'contact',
     'name'      => $name,
@@ -185,6 +195,17 @@ send_email(
     'Thank you for your enquiry - ' . SITE_NAME,
     $user_email_body
 );
+
+// Success is reported only once the enquiry actually landed in the DAS central admin
+// panel — a lead that never arrived must not be confirmed to the visitor as submitted.
+if (!$central_ok) {
+    http_response_code(502);
+    echo json_encode([
+        'success' => false,
+        'message' => 'We could not submit your enquiry right now. Please try again in a moment.'
+    ]);
+    exit;
+}
 
 // Return success response
 echo json_encode([
